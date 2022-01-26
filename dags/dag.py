@@ -7,7 +7,7 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
 
 from operators import (StagingOperator, LoadFactOperator,LoadDimensionOperator, DataQualityOperator)
-from plugins import SqlQueries
+from helpers import SqlQueries
 from create_tables import CreateTable
 
 from os import environ
@@ -37,10 +37,12 @@ dag = DAG('etl_automation',
 
 start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
 
+
+c = CreateTable()
 create_tables = PostgresOperator(    
     task_id='create_table',
     dag=dag,
-    sql=CreateTable.create(),
+    sql= c.create_tables(),
     postgres_conn_id='redshift'
 )
 
