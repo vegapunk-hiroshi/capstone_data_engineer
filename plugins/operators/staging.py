@@ -3,7 +3,7 @@ from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 from airflow.contrib.hooks.aws_hook import AwsHook
 
-class StageToRedshiftOperator(BaseOperator):
+class StagingOperator(BaseOperator):
     template_fields = ("s3_key",)
     
     ui_color = '#358140'
@@ -28,7 +28,7 @@ class StageToRedshiftOperator(BaseOperator):
                  json_path="auto",
                  *args, **kwargs):
 
-        super(StageToRedshiftOperator, self).__init__(*args, **kwargs)
+        super(StagingOperator, self).__init__(*args, **kwargs)
         # Map params here
         # Example:
         # self.conn_id = conn_id
