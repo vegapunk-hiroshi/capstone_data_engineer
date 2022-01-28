@@ -1,5 +1,10 @@
 class SqlQueries:
     
+    autoclassifcation_logs_table_insert = ("""
+        SELECT
+            job_id 
+    """)
+
     songplay_table_insert = ("""
         SELECT
                 md5(events.sessionid || events.start_time) songplay_id,
