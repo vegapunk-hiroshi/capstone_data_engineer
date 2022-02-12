@@ -56,7 +56,7 @@ class CreateTable():
         DROP TABLE IF EXISTS projects;
         CREATE TABLE IF NOT EXISTS projects(
             project_id int NOT NULL,
-            project_name char(50),
+            project_name varchar(max),
             date varchar,
             summary varchar(max)
         );"""

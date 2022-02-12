@@ -94,11 +94,10 @@ load_time_dimension_table = LoadDimensionOperator(
     sql_query=SqlQueries.time_table_insert
 )
 
-
 run_quality_checks = DataQualityOperator(
     task_id='data_quality_checks',
     dag=dag,
-    table=['auto_classification_log', 'users', 'projects', 'time']
+    table=['auto_classification_logs', 'users', 'projects', 'time']
 )
 
 end_operator = DummyOperator(
