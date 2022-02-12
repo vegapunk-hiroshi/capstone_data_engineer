@@ -13,7 +13,8 @@ from create_tables import CreateTable
 from os import environ
 from datetime import datetime, timedelta
 
-
+# Redshift credentials
+# scanx_hiroshi/scanxHiroshi79
 
 AWS_KEY = environ.get('AWS_KEY')
 AWS_SECRET = environ.get('AWS_SECRET')
@@ -28,11 +29,11 @@ default_args = {
     'catchup' : False
 }
 
-dag = DAG('etl_automation',
+dag = DAG('CAPSTONE_ETL_AUTOMATION',
           default_args=default_args,
           description='Load and transform data in Redshift by Airflow',
 #           schedule_interval='0 * * * *',
-          schedule_interval='@weekly',
+          schedule_interval='@hourly',
           catchup=False)
 
 start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
@@ -52,9 +53,9 @@ staging = StagingOperator(
     redshift_conn_id = 'redshift',
     aws_credentials='aws_credentials',
     table='staging_cleansed_logs',
-    s3_bucket='scx',
-    s3_key='',
-    json_path=''
+    s3_bucket='scx-hiroshi',
+    s3_key='auto_classify_jobs_concatenated.csv',
+    json_path='s3://scx-hiroshi/auto_classify_jobs_concatenated.csv'
 )
 
 load_fact_table = LoadFactOperator(

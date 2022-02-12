@@ -1,29 +1,34 @@
 class CreateTable():
     def __init__(self):
         self.staging = """
-        CREATE IF NOT EXISTS staging_cleansed_logs(
+        DROP TABLE IF EXISTS staging_cleansed_logs;
+        CREATE TABLE IF NOT EXISTS staging_cleansed_logs(
             job_id int NOT NULL,
             project_id int NOT NULL,
-            user_id int NOT NULL,
-            ground_profile char(10),
-            bt_clss_profile char(10),
+            project_name varchar(max),
+            date varchar,
+            summary varchar(max),
+            ground_profile char(20),
+            bt_clss_profile char(20),
             resolution char(5),
             noise_profile char(5),
-            noise_type bool,
-            remove_dup bool,
-            airbone_laser bool,
-            class_grdonly bool,
-            nextcore bool,
-            switch_xy bool,
-            create_at timestamp,
-            updated_at timestamp,
-            upload_time timestamp,
+            noise_type char(20),
+            remove_dup int,
+            airbone_laser int,
+            ground_grndonly	int,
+            class_grdonly int,
+            nextcore int,
+            switch_xy int,
+            created_at datetime,
+            updated_at datetime,
+            upload_time char(20),
             user_id int NOT NULL,
-            email char(100),
-            plan int
-        )"""
+            email_encrypted char(150),
+            plan_id int
+        );"""
         self.auto_classification_logs = """
-        CREATE IF NOT EXISTS auto_classification_logs(
+        DROP TABLE IF EXISTS auto_classification_logs;
+        CREATE TABLE IF NOT EXISTS auto_classification_logs(
             job_id int NOT NULL,
             project_id int NOT NULL,
             user_id int NOT NULL,
@@ -31,30 +36,33 @@ class CreateTable():
             bt_clss_profile char(10),
             resolution char(5),
             noise_profile char(5),
-            noise_type bool,
-            remove_dup bool,
-            airbone_laser bool,
-            class_grdonly bool,
-            nextcore bool,
-            switch_xy bool,
-            create_at timestamp,
-            duration timestamp
-        )"""
+            noise_type char(20),
+            remove_dup int,
+            airbone_laser int,
+            class_grdonly int,
+            nextcore int,
+            switch_xy int,
+            created_at datetime,
+            upload_time char(30)
+        );"""
         self.users = """
-        CREATE IF NOT EXISTS users(
+        DROP TABLE IF EXISTS users;
+        CREATE TABLE IF NOT EXISTS users(
             user_id int NOT NULL,
-            email char(100),
-            plan char(20)
-        )"""
+            email_encrypted char(150),
+            plan_id char(20)
+        );"""
         self.projects = """
-        CREATE IF NOT EXISTS projects(
+        DROP TABLE IF EXISTS projects;
+        CREATE TABLE IF NOT EXISTS projects(
             project_id int NOT NULL,
             project_name char(50),
-            date timestamp,
-            summary varchar
-        )"""
+            date varchar,
+            summary varchar(max)
+        );"""
         self.time = """
-        CREATE IF NOT EXISTS time(
+        DROP TABLE IF EXISTS time;
+        CREATE TABLE IF NOT EXISTS time(
             created_at timestamp NOT NULL,
             hour int,
             day int,
@@ -62,8 +70,8 @@ class CreateTable():
             month int,
             year int,
             weekday int
-        )"""
+        );"""
         
     def create_tables(self):
-        return f'{self.staging} ¥n {self.auto_classification_logs} ¥n {self.users} ¥n {self.projects} ¥n {self.time} ¥n '
+        return f'{self.staging} {self.auto_classification_logs} {self.users} {self.projects} {self.time}'
         

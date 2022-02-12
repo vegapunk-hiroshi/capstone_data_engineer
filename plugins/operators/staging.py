@@ -12,8 +12,12 @@ class StagingOperator(BaseOperator):
     FROM '{}' 
     ACCESS_KEY_ID '{}'
     SECRET_ACCESS_KEY '{}'
-    FORMAT AS JSON '{}';
+    FORMAT AS CSV 
+    IGNOREHEADER 1
+    dateformat 'auto';
     """
+# FORMAT AS JSON '{}';
+
     
     @apply_defaults
     def __init__(self,
@@ -37,11 +41,12 @@ class StagingOperator(BaseOperator):
         self.table=table
         self.s3_bucket=s3_bucket
         self.s3_key=s3_key
-        self.json_path = json_path
+        # self.json_path = json_path
 
     def execute(self, context):
-
-        aws_hook = AwsHook(self.aws_credentials)
+        self.log.info(f"Connected with {self.redshift_conn_id}")
+        self.log.info(f"Connected with {self.aws_credentials}")
+        aws_hook = AwsHook(self.aws_credentials, client_type="redshift")
         credentials = aws_hook.get_credentials()
         redshift_hook = PostgresHook(postgres_conn_id=self.redshift_conn_id)
         
@@ -53,11 +58,12 @@ class StagingOperator(BaseOperator):
         s3_path = "s3://{}/{}".format(self.s3_bucket, rendered_key)
         
         
-        staged_sql = StageToRedshiftOperator.copy_sql.format(
+        staged_sql = StagingOperator.copy_sql.format(
             self.table,
             s3_path,
             credentials.access_key,
-            credentials.secret_key,
-            self.json_path
+            credentials.secret_key
         )
+        # ,self.json_path
+        self.log.info(f"Staging data from S3 to Redshift {staged_sql}")
         redshift_hook.run(staged_sql)

@@ -2,47 +2,45 @@ class SqlQueries:
     
     autoclassifcation_logs_table_insert = ("""
         SELECT
-            job_id 
+            job_id,
+            project_id,
+            user_id,
+            ground_profile,
+            bt_clss_profile,
+            resolution,
+            noise_profile,
+            noise_type,
+            remove_dup,
+            airbone_laser,
+            class_grdonly,
+            nextcore,
+            switch_xy,
+            created_at,
+            upload_time
+        FROM staging_cleansed_logs;
     """)
 
-    songplay_table_insert = ("""
-        SELECT
-                md5(events.sessionid || events.start_time) songplay_id,
-                events.start_time, 
-                events.userid, 
-                events.level, 
-                songs.song_id, 
-                songs.artist_id, 
-                events.sessionid, 
-                events.location, 
-                events.useragent
-                FROM (SELECT TIMESTAMP 'epoch' + ts/1000 * interval '1 second' AS start_time, *
-            FROM staging_events
-            WHERE page='NextSong') events
-            LEFT JOIN staging_songs songs
-            ON events.song = songs.title
-                AND events.artist = songs.artist_name
-                AND events.length = songs.duration
+    users_table_insert = ("""
+        SELECT DISTINCT 
+            user_id, 
+            email_encrypted, 
+            plan_id
+        FROM staging_cleansed_logs;
     """)
 
-    user_table_insert = ("""
-        SELECT distinct userid, firstname, lastname, gender, level
-        FROM staging_events
-        WHERE page='NextSong'
-    """)
-
-    song_table_insert = ("""
-        SELECT distinct song_id, title, artist_id, year, duration
-        FROM staging_songs
-    """)
-
-    artist_table_insert = ("""
-        SELECT distinct artist_id, artist_name, artist_location, artist_latitude, artist_longitude
-        FROM staging_songs
+    projects_table_insert = ("""
+        SELECT DISTINCT 
+            project_id,
+            project_name,
+            date,
+            summary
+        FROM staging_cleansed_logs;
     """)
 
     time_table_insert = ("""
-        SELECT start_time, extract(hour from start_time), extract(day from start_time), extract(week from start_time), 
-               extract(month from start_time), extract(year from start_time), extract(dayofweek from start_time)
-        FROM songplays
+        SELECT created_at, extract(hour from created_at), extract(day from created_at), extract(week from created_at), 
+               extract(month from created_at), extract(year from created_at), extract(dayofweek from created_at)
+        FROM staging_cleansed_logs;
     """)
+
+
