@@ -69,8 +69,9 @@ Structure descriptions of the main files are written below:
 #### Analyst wants to know what the specific user used ground profile to perform the auto-classification by months on 2021.
 
 
-`` WITH u AS (SELECT * FROM "dev"."public"."auto_classification_logs" WHERE user_id=211) \
+` WITH u AS (SELECT * FROM "dev"."public"."auto_classification_logs" 
+WHERE user_id=211) 
 SELECT t.year, t.month, u.ground_profile, COUNT (*)
-FROM u\
+FROM u
 LEFT OUTER JOIN "dev"."public"."time" AS t ON u.created_at = t.created_at 
-GROUP BY t.year, t.month, u.ground_profile  HAVING t.year = 2021 ORDER BY t.month, u.ground_profile; ``
+GROUP BY t.year, t.month, u.ground_profile  HAVING t.year = 2021 ORDER BY t.month, u.ground_profile; `
