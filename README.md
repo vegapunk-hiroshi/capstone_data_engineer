@@ -45,6 +45,18 @@ s3://scx-hiroshi/auto_classify_jobs_concatenated.csv
 5. Turn on the DAG and scheduled ETL process for the datasets will start.
 ![airflowui](./airflowUI.png)
 
+## Addressing Other Scenarios
+I have written the solution for each sceneraios as below:
+- The data was increased by 100x.
+Redshift will handle up scale of your datasets.
+
+- The pipelines would be run on a daily basis by 7 am every day.
+By using Airflow, you can schedule the execution of the pipelines whenever you want with additional beatiful UI.
+
+- The database needed to be accessed by 100+ people.
+Redshift can handle a large number of users by excelent load-balancing technology of AWS.
+
+
 ## Structure Of Scripts
 
 Structure descriptions of the main files are written below:
