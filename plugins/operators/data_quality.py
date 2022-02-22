@@ -4,9 +4,14 @@ from airflow.utils.decorators import apply_defaults
 
 class DataQualityOperator(BaseOperator):
     
-    check_no_data="""
+    check_no_data = """
     SELECT COUNT(*)
     FROM {} 
+    """
+    type_check = """
+    SELECT *
+    FROM {}
+    LIMIT 1
     """
 
     ui_color = '#89DA59'
@@ -42,7 +47,8 @@ class DataQualityOperator(BaseOperator):
 
             if record < 0:
                 errors.append(tb)
-                
+            
+
         if len(errors) > 0:
             for e in errors:
                 self.log.info(f"Error at {e}")
