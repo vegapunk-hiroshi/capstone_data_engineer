@@ -9,7 +9,7 @@ class DataQualityOperator(BaseOperator):
     FROM {} 
     """
     type_check = """
-    SELECT *
+    SELECT {}
     FROM {}
     LIMIT 1
     """
@@ -22,7 +22,7 @@ class DataQualityOperator(BaseOperator):
                  # Example:
                  # conn_id = your-connection-name
                  redshift_conn_id = "redshift",
-                 table = [],
+                 table = {},
                  *args, **kwargs):
 
         super(DataQualityOperator, self).__init__(*args, **kwargs)
@@ -39,15 +39,34 @@ class DataQualityOperator(BaseOperator):
         
         errors = []
         
-        for tb in self.table:
-            sql_query=DataQualityOperator.check_no_data.format(tb)
-            records=redshift_hook.get_records(sql_query)[0]
+        for tb in self.table.key():
+            sql_query = DataQualityOperator.check_no_data.format(tb)
+            records = redshift_hook.get_records(sql_query)[0]
             record = records[0]
             self.log.info(f"Number of record of {tb} table: {record}")
 
             if record < 0:
                 errors.append(tb)
-            
+        
+        for tb_name, ls in self.table.items():
+            sql_query = DataQualityOperator.check_no_data.format(ls[0], tb_name)
+            record = redshift_hook.get_records(sql_query)[0]
+            cell = record[0]
+            self.log.info(f" record type check: the cell is {cell}")
+            if ls[1] == 'str':
+                if type(cell) is str:
+                    self.log.info(f"The column '{ls[0]}' of '{tb_name}' table is string type. Data check passed. ")
+                else:
+                    self.log.info(f"The column '{ls[0]}' of '{tb_name}' table is not string type. Data check unpassed. ")
+        
+            elif ls[1] == 'int':
+                if type(cell) is int:
+                    self.log.info(f"The column '{ls[0]}' of '{tb_name}' table is int type. Data check passed. ")
+                else:
+                    self.log.info(f"The column '{ls[0]}' of '{tb_name}' table is not int type. Data check unpassed. ")
+            else:
+                self.log.info(f"The column '{ls[0]}' of '{tb_name}' table has failed data check.")
+
 
         if len(errors) > 0:
             for e in errors:
@@ -55,3 +74,4 @@ class DataQualityOperator(BaseOperator):
                 raise ValueError("Couldn't pass data quality check ")
 
         self.log.info(f"Passed the data quality tests per table")
+        

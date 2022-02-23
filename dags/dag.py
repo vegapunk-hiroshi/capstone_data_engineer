@@ -97,7 +97,12 @@ load_time_dimension_table = LoadDimensionOperator(
 run_quality_checks = DataQualityOperator(
     task_id='data_quality_checks',
     dag=dag,
-    table=['auto_classification_logs', 'users', 'projects', 'time']
+    table={
+        'auto_classification_logs':['ground_profile': 'str'], 
+        'users':['email': 'str'], 
+        'projects': ['project_name': 'str'], 
+        'time': ['hour': 'int']
+        }
 )
 
 end_operator = DummyOperator(
