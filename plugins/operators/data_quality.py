@@ -39,7 +39,7 @@ class DataQualityOperator(BaseOperator):
         
         errors = []
         
-        for tb in self.table.key():
+        for tb in self.table.keys():
             sql_query = DataQualityOperator.check_no_data.format(tb)
             records = redshift_hook.get_records(sql_query)[0]
             record = records[0]
@@ -49,7 +49,7 @@ class DataQualityOperator(BaseOperator):
                 errors.append(tb)
         
         for tb_name, ls in self.table.items():
-            sql_query = DataQualityOperator.check_no_data.format(ls[0], tb_name)
+            sql_query = DataQualityOperator.type_check.format(ls[0], tb_name)
             record = redshift_hook.get_records(sql_query)[0]
             cell = record[0]
             self.log.info(f" record type check: the cell is {cell}")
@@ -74,4 +74,3 @@ class DataQualityOperator(BaseOperator):
                 raise ValueError("Couldn't pass data quality check ")
 
         self.log.info(f"Passed the data quality tests per table")
-        

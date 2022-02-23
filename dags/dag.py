@@ -98,10 +98,10 @@ run_quality_checks = DataQualityOperator(
     task_id='data_quality_checks',
     dag=dag,
     table={
-        'auto_classification_logs':['ground_profile': 'str'], 
-        'users':['email': 'str'], 
-        'projects': ['project_name': 'str'], 
-        'time': ['hour': 'int']
+        'auto_classification_logs': ['ground_profile', 'str'], 
+        'users':['email_encrypted', 'str'], 
+        'projects': ['project_name', 'str'], 
+        'time': ['hour', 'int']
         }
 )
 
