@@ -73,12 +73,15 @@ s3://scx-hiroshi/auto_classify_jobs_concatenated.csv
 ## Addressing Other Scenarios
 I have written the solution for each sceneraios as below:
 - The data was increased by 100x.
+
 If the data was increased by 100x, using Amazon EMR can handle the increasing processing requirements by distributing the data accross the multiple clusters deployed. It can also automatically scale out when it is configured full mananged. 
 
 - The pipelines would be run on a daily basis by 7 am every day.
+
 By using Apache Airflow, you can schedule the execution of the pipelines whenever you want in the DAG class configuration.
 
 - The database needed to be accessed by 100+ people.
+
 You can deploy the database across multiple Availability Zone and do load balance incoming trafic by full managed Elastic Load Balancing.
 Also, Amazon RDS has ability to add redundancy to the database by uisng the Multi-Avalable Zone feature.
 
